@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-public final class Bridge<Root>: UIViewRepresentable where Root : UIView {
+public struct Bridge<Root>: UIViewRepresentable where Root : UIView {
 
     public typealias UIViewType = Root
     public typealias Configuration = UIViewConfiguration<UIViewType>
