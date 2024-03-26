@@ -5,14 +5,15 @@
 //  Created by Guillaume Coquard on 26/03/24.
 //
 
-import Foundation
+import UIKit
 
-public struct UIViewConfiguration<UIViewType> {
+public struct UIViewConfiguration<Root>: UIViewConfigurationObject where Root : UIView {
 
+    public typealias UIViewType = Root
     public typealias ConfigurationMoment = CycleMoment
     public typealias ConfigurationTask = (UIViewType?) -> UIViewType?
 
-    static private func Passthrough(_ view: UIViewType?) -> UIViewType? { view }
+    static private func Passthrough(_ object: UIViewType?) -> UIViewType? { object }
 
     private(set) public var moment: ConfigurationMoment = .all
     private(set) public var task: ConfigurationTask = Self.Passthrough

@@ -12,11 +12,16 @@ import SwiftUI
 public final class Bridge<Root>: UIViewRepresentable where Root : UIView {
 
     public typealias UIViewType = Root
-    public typealias Coordinator = BridgeCoordinator<Root>
-    public typealias `Self` = Bridge<Root>
     public typealias Configuration = UIViewConfiguration<UIViewType>
+    public typealias Coordinator = BridgeCoordinator<UIViewType>
 
     private(set) var configurations: [Configuration] = []
+    private(set) var view: UIViewType?
+
+    init(_ bridge: Bridge) {
+        self.view = bridge.view
+        self.configurations = bridge.configurations
+    }
 
     init(_ configurations: [Configuration]) {
         self.configurations = configurations
@@ -27,7 +32,7 @@ public final class Bridge<Root>: UIViewRepresentable where Root : UIView {
     }
 
     public func makeUIView(context: Context) -> UIViewType {
-        context.coordinator.configure(.make)
+        context.coordinator.configure(.make, self.view)!
     }
 
     public func updateUIView(_ uiView: UIViewType, context: Context) {
@@ -37,14 +42,4 @@ public final class Bridge<Root>: UIViewRepresentable where Root : UIView {
     public func makeCoordinator() -> Coordinator {
         Coordinator(self.configurations)
     }
-
-    static func initialize(_ bridge: `Self`? = nil, configurations: [Configuration]...) -> Self {
-        if let bridge = bridge {
-            return bridge
-        } else {
-            return `Self`(configurations.flatMap { $0 })
-        }
-    }
-
-
 }

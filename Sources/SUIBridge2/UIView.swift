@@ -8,57 +8,38 @@
 import UIKit
 import SwiftUI
 
-extension UIView {
 
-    public func set<T,Value>(
+public protocol SetModifiable {
+    associatedtype T
+    associatedtype U
+    func set<Value>(_ path: ReferenceWritableKeyPath<T,Value>, to value: Value) -> U
+}
+
+extension SetModifiable where T : UIView, T == Self {
+
+    public func set<Value>(
         _ path: ReferenceWritableKeyPath<T,Value>,
         to value: Value,
         at step: CycleMoment = .all
-    ) -> TransientConfigurations<T> where T : UIView {
-        .init(T.self, [
-            UIViewConfiguration<T>(step) { (view: T?) in
+    ) -> Transients<T> {
+        .init(self, [
+            Bridge<T>.Configuration(step) { (view: T?) in
                 view?[keyPath: path] = value
                 return view
             }
         ])
     }
 
-    public func set<T,Value>(
+    public func set<Value>(
         _ path: ReferenceWritableKeyPath<T,Value>,
         to value: @escaping () -> Value,
         at step: CycleMoment = .all
-    ) -> TransientConfigurations<T> where T : UIView {
-        .init(T.self, [
-            UIViewConfiguration<T>(step) { (view: T?) in
+    ) -> Transients<T> {
+        .init(self, [
+            Bridge<T>.Configuration(step) { (view: T?) in
                 view?[keyPath: path] = value()
                 return view
             }
         ])
-    }
-
-    public func set<T,Value>(
-        _ path: ReferenceWritableKeyPath<T,Value>,
-        to value: Value,
-        at step: CycleMoment = .all
-    ) -> Bridge<T> where T : UIView {
-        .init(
-            UIViewConfiguration<T>(step) { (view: T?) in
-                view?[keyPath: path] = value
-                return view
-            }
-        )
-    }
-
-    public func set<T,Value>(
-        _ path: ReferenceWritableKeyPath<T,Value>,
-        to value: @escaping () -> Value,
-        at step: CycleMoment = .all
-    ) -> Bridge<T> where T : UIView {
-        .init(
-            UIViewConfiguration<T>(step) { (view: T?) in
-                view?[keyPath: path] = value()
-                return view
-            }
-        )
     }
 }

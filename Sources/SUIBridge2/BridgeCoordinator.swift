@@ -36,11 +36,11 @@ open class BridgeCoordinator<Root> where Root : UIView {
     }
 
     @discardableResult
-    func configure(_ moment: CycleMoment, _ view: Root? = nil, frame: CGRect? = nil) -> UIViewType {
+    func configure(_ moment: CycleMoment, _ view: UIViewType? = nil, frame: CGRect? = nil) -> UIViewType? {
         return if let view = view {
-            composeConfigurations(moment)(view)!
+            composeConfigurations(moment)(view)
         } else {
-            composeConfigurations(moment)(frame != nil ? .init(frame: frame!) : .init())!
+            composeConfigurations(moment)(frame != nil ? .init(frame: frame!) : .init())
         }
     }
 
