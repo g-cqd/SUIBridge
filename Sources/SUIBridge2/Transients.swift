@@ -8,7 +8,7 @@
 import UIKit
 import SwiftUI
 
-public struct Transients<Root>: View where Root : UIView {
+public struct Transients<Root>: View  where Root : UIView {
 
     public typealias UIViewType = Root
     public typealias Configuration = UIViewConfiguration<UIViewType>
