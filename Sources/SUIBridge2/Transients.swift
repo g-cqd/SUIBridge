@@ -59,7 +59,7 @@ public struct Transients<Root>: View  where Root : UIView {
 
 
     public var body: some View {
-        Bridge<UIViewType>(configurations)
+        AnyView(Bridge<UIViewType>(self.view, self.configurations))
     }
 
 }

@@ -23,6 +23,16 @@ public final class Bridge<Root>: UIViewRepresentable where Root : UIView {
         self.configurations = bridge.configurations
     }
 
+    init(_ view: UIViewType, _ configurations: [Configuration]) {
+        self.view = view
+        self.configurations = configurations
+    }
+
+    init(_ view: UIViewType, _ configurations: Configuration...) {
+        self.view = view
+        self.configurations = configurations
+    }
+
     init(_ configurations: [Configuration]) {
         self.configurations = configurations
     }
