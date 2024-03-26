@@ -32,7 +32,7 @@ public struct Transients<Root>: View  where Root : UIView {
     }
 
     public func set<Value>(
-        _ path: ReferenceWritableKeyPath<NSObject,Value>,
+        _ path: ReferenceWritableKeyPath<UIViewType,Value>,
         to value: Value,
         at step: CycleMoment
     ) -> Self {
