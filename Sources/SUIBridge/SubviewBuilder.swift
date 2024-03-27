@@ -1,15 +1,17 @@
 //
-//  UISubviewBuilder.swift
+//  SubviewBuilder.swift
 //  
 //
 //  Created by Guillaume Coquard on 26/03/24.
 //
 
-import UIKit
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 @resultBuilder
-struct UISubviewBuilder<R> where R : UIView {
+struct SubviewBuilder<R> where R : Representable.Represented {
 
     static func buildOptional(_ component: R?) -> R {
         return if let component = component {

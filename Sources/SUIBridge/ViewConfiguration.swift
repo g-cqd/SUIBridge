@@ -1,19 +1,23 @@
 //
-//  File 2.swift
+//  ViewConfiguration.swift
 //  
 //
 //  Created by Guillaume Coquard on 26/03/24.
 //
 
+#if os(iOS)
 import UIKit
+#elseif os(macOS)
+import SwiftUI
+#endif
 
-public struct UIViewConfiguration<Root> where Root : UIView {
+public struct ViewConfiguration<Root> where Root : Representable.Represented {
 
-    public typealias UIViewType = Root
+    public typealias ViewType = Root
     public typealias ConfigurationMoment = CycleMoment
-    public typealias ConfigurationTask = (UIViewType?) -> UIViewType?
+    public typealias ConfigurationTask = (ViewType?) -> ViewType?
 
-    static private func Passthrough(_ object: UIViewType?) -> UIViewType? { object }
+    static private func Passthrough(_ object: ViewType?) -> ViewType? { object }
 
     private(set) public var moment: ConfigurationMoment = .all
     private(set) public var task: ConfigurationTask = Self.Passthrough
@@ -44,15 +48,15 @@ public struct UIViewConfiguration<Root> where Root : UIView {
 
     init(_ moment: ConfigurationMoment = .all, tasks: [ConfigurationTask]) {
         self.moment = moment
-        self.task = tasks.reduce({ (view: UIViewType?) in view }) { prev, next in
-            { (view: UIViewType?) in next( prev( view )) }
+        self.task = tasks.reduce({ (view: ViewType?) in view }) { prev, next in
+            { (view: ViewType?) in next( prev( view )) }
         }
     }
 
     init(_ moment: ConfigurationMoment = .all, tasks: ConfigurationTask...) {
         self.moment = moment
-        self.task = tasks.reduce({ (view: UIViewType?) in view }) { prev, next in
-            { (view: UIViewType?) in next( prev( view )) }
+        self.task = tasks.reduce({ (view: ViewType?) in view }) { prev, next in
+            { (view: ViewType?) in next( prev( view )) }
         }
     }
 
@@ -76,16 +80,16 @@ public struct UIViewConfiguration<Root> where Root : UIView {
         return if moment.isEmpty  {
             Self()
         } else {
-            Self(moment, { (view: UIViewType?) in rhs.task( lhs.task( view ) ) })
+            Self(moment, { (view: ViewType?) in rhs.task( lhs.task( view ) ) })
         }
     }
 
     static public func +(lhs: Self, rhs: @escaping ConfigurationTask) -> Self {
-        Self(lhs.moment, { (view: UIViewType?) in rhs( lhs.task( view ) ) })
+        Self(lhs.moment, { (view: ViewType?) in rhs( lhs.task( view ) ) })
     }
 
     static public func +(lhs: @escaping ConfigurationTask, rhs: Self) -> Self {
-        Self(rhs.moment, { (view: UIViewType?) in rhs.task( lhs( view ) ) })
+        Self(rhs.moment, { (view: ViewType?) in rhs.task( lhs( view ) ) })
     }
 
     public func precedes(_ configurations: Self...) -> Self {
@@ -97,7 +101,7 @@ public struct UIViewConfiguration<Root> where Root : UIView {
     }
 
     @discardableResult
-    public func callAsFunction(_ view: UIViewType?) -> UIViewType? {
+    public func callAsFunction(_ view: ViewType?) -> ViewType? {
         self.task( view )
     }
 }

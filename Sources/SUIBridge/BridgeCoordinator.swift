@@ -5,13 +5,16 @@
 //  Created by Guillaume Coquard on 26/03/24.
 //
 
+#if os(iOS)
 import UIKit
+#elseif os(macOS)
+import SwiftUI
+#endif
 
-open class BridgeCoordinator<Root> where Root : UIView {
+open class BridgeCoordinator<Root> where Root : Representable.Represented {
 
-    typealias UIViewType = Root
-    typealias UIViewRepresentable = Bridge<UIViewType>
-    typealias Configuration = UIViewConfiguration<UIViewType>
+    typealias ViewType = Root
+    typealias Configuration = ViewConfiguration<ViewType>
 
     var configurations: [Configuration] = []
 
@@ -36,7 +39,7 @@ open class BridgeCoordinator<Root> where Root : UIView {
     }
 
     @discardableResult
-    func configure(_ moment: CycleMoment, _ view: UIViewType? = nil, frame: CGRect? = nil) -> UIViewType? {
+    func configure(_ moment: CycleMoment, _ view: ViewType? = nil, frame: CGRect? = nil) -> ViewType? {
         return if let view = view {
             self.compose(moment)(view)
         } else {

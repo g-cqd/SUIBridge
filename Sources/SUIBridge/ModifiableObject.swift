@@ -1,15 +1,17 @@
 //
-//  File.swift
-//  
+//  ModifiableObject.swift
+//
 //
 //  Created by Guillaume Coquard on 26/03/24.
 //
 
-import UIKit
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 
-public protocol SetModifiableProtocol {
+public protocol ModifiableObject {
     associatedtype R
     associatedtype S
     associatedtype T
@@ -17,7 +19,7 @@ public protocol SetModifiableProtocol {
     func set<Value>(_ path: ReferenceWritableKeyPath<R,Value>, to value: @autoclosure @escaping () -> Value, at step: CycleMoment) -> T
 }
 
-extension SetModifiableProtocol {
+extension ModifiableObject {
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<Self,Value>,
         to value: @autoclosure @escaping () -> Value,
@@ -28,15 +30,15 @@ extension SetModifiableProtocol {
     }
 }
 
-extension SetModifiableProtocol where R : UIView {
+extension ModifiableObject where R : Representable.Represented {
 
-    public typealias T = Transients<R>
+    public typealias T = Bridged<R>
 
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<Self,Value>,
         to value: @autoclosure @escaping () -> Value,
         at step: CycleMoment = .all
-    ) -> Transients<Self> {
+    ) -> Bridged<Self> {
         .init(self, [
             .init(step) { (view: Self?) in
                 view?[keyPath: path] = value()
