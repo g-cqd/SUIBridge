@@ -13,13 +13,17 @@ public protocol SetModifiableProtocol {
     associatedtype R
     associatedtype S
     associatedtype T
-    func set<Value>(_ path: ReferenceWritableKeyPath<R,Value>, to value: Value) -> S
-    func set<Value>(_ path: ReferenceWritableKeyPath<R,Value>, to value: Value) -> T
+    func set<Value>(_ path: ReferenceWritableKeyPath<R,Value>, to value: @autoclosure @escaping () -> Value, at step: CycleMoment) -> S
+    func set<Value>(_ path: ReferenceWritableKeyPath<R,Value>, to value: @autoclosure @escaping () -> Value, at step: CycleMoment) -> T
 }
 
 extension SetModifiableProtocol {
-    public func set<Value>(_ keyPath: ReferenceWritableKeyPath<Self, Value>, to value: Value) -> Self {
-        self[keyPath: keyPath] = value
+    public func set<Value>(
+        _ path: ReferenceWritableKeyPath<Self,Value>,
+        to value: @autoclosure @escaping () -> Value,
+        at step: CycleMoment
+    ) -> Self {
+        self[keyPath: path] = value()
         return self
     }
 }
@@ -30,24 +34,11 @@ extension SetModifiableProtocol where R : UIView {
 
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<Self,Value>,
-        to value: Value,
+        to value: @autoclosure @escaping () -> Value,
         at step: CycleMoment = .all
     ) -> Transients<Self> {
         .init(self, [
-            Transients<Self>.Configuration(step) { (view: Self?) in
-                view?[keyPath: path] = value
-                return view
-            }
-        ])
-    }
-
-    public func set<Value>(
-        _ path: ReferenceWritableKeyPath<Self,Value>,
-        to value: @escaping () -> Value,
-        at step: CycleMoment = .all
-    ) -> Transients<Self> {
-        .init(self, [
-            Transients<Self>.Configuration(step) { (view: Self?) in
+            .init(step) { (view: Self?) in
                 view?[keyPath: path] = value()
                 return view
             }

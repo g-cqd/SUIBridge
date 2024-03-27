@@ -42,11 +42,11 @@ public struct Bridge<Root>: UIViewRepresentable where Root : UIView {
     }
 
     public func makeUIView(context: Context) -> UIViewType {
-        context.coordinator.configure(.make, self.view)!
+        context.coordinator.compose(.make, configurations: self.configurations)(self.view)!
     }
 
     public func updateUIView(_ uiView: UIViewType, context: Context) {
-        context.coordinator.configure(.update, uiView)
+        context.coordinator.compose(.update, configurations: self.configurations)(uiView)
     }
 
     public func makeCoordinator() -> Coordinator {

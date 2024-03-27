@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct UIViewConfiguration<Root>: UIViewConfigurationObject where Root : UIView {
+public struct UIViewConfiguration<Root> where Root : UIView {
 
     public typealias UIViewType = Root
     public typealias ConfigurationMoment = CycleMoment

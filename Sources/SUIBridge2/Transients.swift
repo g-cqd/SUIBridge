@@ -15,7 +15,7 @@ public struct Transients<Root>: View  where Root : UIView {
     public typealias Configurations = [Configuration]
 
     let view: UIViewType
-    let configurations: Configurations
+    var configurations: Configurations = []
 
     init(_ view: UIViewType, _ configurations: Configurations) {
         self.view = view
@@ -24,42 +24,32 @@ public struct Transients<Root>: View  where Root : UIView {
 
     @discardableResult
     public func appending(_ configuration: Configuration) -> Self {
-        
         var configurations = self.configurations
         configurations.append(configuration)
-
-        return Self(view, configurations)
+        return Self(self.view, configurations)
     }
 
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<UIViewType,Value>,
-        to value: Value,
-        at step: CycleMoment
+        to value: @autoclosure @escaping () -> Value?,
+        at step: CycleMoment = .all
     ) -> Self {
         self.appending(
             Configuration(step) { (view: UIViewType?) in
-                view?[keyPath: path] = value
+                view?[keyPath: path] = value() ?? view![keyPath: path]
                 return view
             }
         )
     }
 
-    public func set<Value>(
-        _ path: ReferenceWritableKeyPath<UIViewType,Value>,
-        to value: @escaping () -> Value,
-        at step: CycleMoment
-    ) -> Self {
-        self.appending(
-            Configuration(step) { (view: UIViewType?) in
-                view?[keyPath: path] = value()
-                return view
-            }
-        )
+    public func containing(@UISubviewBuilder<UIViewType> subviews: () -> UIViewType) -> Self {
+        self.view.addSubview( subviews() )
+        return Self(self.view, self.configurations)
     }
 
 
     public var body: some View {
-        AnyView(Bridge<UIViewType>(self.view, self.configurations))
+        Bridge<UIViewType>(self.view, self.configurations)
     }
 
 }

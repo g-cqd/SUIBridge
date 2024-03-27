@@ -23,24 +23,24 @@ open class BridgeCoordinator<Root> where Root : UIView {
         self.configurations = configurations
     }
 
-    private func composeConfigurations(_ moment: CycleMoment) -> Configuration {
+    func compose(_ moment: CycleMoment) -> Configuration {
         configurations.reduce(.init(moment), +)
     }
 
-    var makeConfiguration: Configuration {
-        composeConfigurations(.make)
+    func compose(_ moment: CycleMoment, configurations: Configuration...) -> Configuration {
+        configurations.reduce(.init(moment), +)
     }
 
-    var updateConfiguration: Configuration {
-        composeConfigurations(.update)
+    func compose(_ moment: CycleMoment, configurations: [Configuration]) -> Configuration {
+        configurations.reduce(.init(moment), +)
     }
 
     @discardableResult
     func configure(_ moment: CycleMoment, _ view: UIViewType? = nil, frame: CGRect? = nil) -> UIViewType? {
         return if let view = view {
-            composeConfigurations(moment)(view)
+            self.compose(moment)(view)
         } else {
-            composeConfigurations(moment)(frame != nil ? .init(frame: frame!) : .init())
+            self.compose(moment)(frame != nil ? .init(frame: frame!) : .init())
         }
     }
 
