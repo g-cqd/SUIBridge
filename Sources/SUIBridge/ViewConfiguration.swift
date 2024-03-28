@@ -17,60 +17,60 @@ public struct ViewConfiguration<Root> where Root : Representable.Represented {
     public typealias ConfigurationMoment = CycleMoment
     public typealias ConfigurationTask = (ViewType?) -> ViewType?
 
-    static private func Passthrough(_ object: ViewType?) -> ViewType? { object }
+    static public func Passthrough(_ object: ViewType?) -> ViewType? { object }
 
     private(set) public var moment: ConfigurationMoment = .all
     private(set) public var task: ConfigurationTask = Self.Passthrough
 
-    init() {}
+    public init() {}
 
-    init(_ configuration: Self) {
+    public init(_ configuration: Self) {
         self.moment = configuration.moment
         self.task = configuration.task
     }
 
-    init(_ configurations: [Self]) {
+    public init(_ configurations: [Self]) {
         let configuration = configurations.reduce(self, { prev, next in prev + next })
         self.moment = configuration.moment
         self.task = configuration.task
     }
 
-    init(_ configurations: Self...) {
+    public init(_ configurations: Self...) {
         let configuration = configurations.reduce(self, { prev, next in prev + next })
         self.moment = configuration.moment
         self.task = configuration.task
     }
 
-    init(_ moment: ConfigurationMoment = .all, _ task: @escaping ConfigurationTask = Self.Passthrough) {
+    public init(_ moment: ConfigurationMoment = .all, _ task: @escaping ConfigurationTask = Self.Passthrough) {
         self.moment = moment
         self.task = task
     }
 
-    init(_ moment: ConfigurationMoment = .all, tasks: [ConfigurationTask]) {
+    public init(_ moment: ConfigurationMoment = .all, tasks: [ConfigurationTask]) {
         self.moment = moment
         self.task = tasks.reduce({ (view: ViewType?) in view }) { prev, next in
             { (view: ViewType?) in next( prev( view )) }
         }
     }
 
-    init(_ moment: ConfigurationMoment = .all, tasks: ConfigurationTask...) {
+    public init(_ moment: ConfigurationMoment = .all, tasks: ConfigurationTask...) {
         self.moment = moment
         self.task = tasks.reduce({ (view: ViewType?) in view }) { prev, next in
             { (view: ViewType?) in next( prev( view )) }
         }
     }
 
-    init(_ moment: ConfigurationMoment = .all, from configuration: Self) {
+    public init(_ moment: ConfigurationMoment = .all, from configuration: Self) {
         self.moment = moment
         self.task = configuration.task
     }
 
-    init(_ moment: ConfigurationMoment = .all, from configurations: [Self]) {
+    public init(_ moment: ConfigurationMoment = .all, from configurations: [Self]) {
         self.moment = moment
         self.task = configurations.reduce(.init(), +).task
     }
 
-    init(_ moment: ConfigurationMoment = .all, from configurations: Self...) {
+    public init(_ moment: ConfigurationMoment = .all, from configurations: Self...) {
         self.moment = moment
         self.task = configurations.reduce(.init(), +).task
     }
