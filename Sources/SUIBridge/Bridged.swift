@@ -50,7 +50,7 @@ public struct Bridged<Root>: View  where Root : Representable.Represented {
         )
     }
 
-    public func containing(@SubviewBuilder<ViewType> subviews: () -> ViewType) -> Self {
+    public func containing(@SubviewBuilder subviews: () -> Representable.Represented) -> Self {
         self.view.addSubview( subviews() )
         return Self(self.view, self.configurations)
     }

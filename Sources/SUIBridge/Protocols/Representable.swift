@@ -16,3 +16,12 @@ public protocol Representable {
     typealias Represented = UIView
 #endif
 }
+
+
+extension Representable.Represented: Modifiable {}
+extension Representable.Represented {
+    func callAsFunction<Subview>(@SubviewBuilder subview: () -> Subview) -> Self where Subview : Representable.Represented {
+        self.addSubview(subview())
+        return self
+    }
+}

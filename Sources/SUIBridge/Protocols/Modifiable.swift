@@ -11,7 +11,7 @@ import UIKit
 #endif
 
 
-public protocol ModifiableObject {
+public protocol Modifiable {
     associatedtype R
     associatedtype S
     associatedtype T
@@ -19,7 +19,7 @@ public protocol ModifiableObject {
     func set<Value>(_ path: ReferenceWritableKeyPath<R,Value>, to value: @autoclosure @escaping () -> Value, at step: CycleMoment) -> T
 }
 
-extension ModifiableObject {
+extension Modifiable {
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<Self,Value>,
         to value: @autoclosure @escaping () -> Value,
@@ -30,7 +30,7 @@ extension ModifiableObject {
     }
 }
 
-extension ModifiableObject where R : Representable.Represented {
+extension Modifiable where R : Representable.Represented {
 
     public typealias T = Bridged<R>
 
