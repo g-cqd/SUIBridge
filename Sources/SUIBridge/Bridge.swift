@@ -1,6 +1,6 @@
 //
 //  Bridge.swift
-//  
+//
 //
 //  Created by Guillaume Coquard on 26/03/24.
 //
@@ -11,16 +11,15 @@ import UIKit
 #endif
 import SwiftUI
 
+public struct Bridge<Root>: Representable.ViewRepresentable where Root: Representable.Represented {
 
-public struct Bridge<Root>: Representable.ViewRepresentable where Root : Representable.Represented {
-
-#if os(macOS)
+    #if os(macOS)
     public typealias NSViewType = Root
     public typealias ViewType =  NSViewType
-#elseif os(iOS)
+    #elseif os(iOS)
     public typealias UIViewType = Root
     public typealias ViewType = UIViewType
-#endif
+    #endif
     public typealias Configuration = ViewConfiguration<ViewType>
     public typealias Coordinator = BridgeCoordinator<ViewType>
 
@@ -52,23 +51,23 @@ public struct Bridge<Root>: Representable.ViewRepresentable where Root : Represe
 
     #if os(iOS)
     public func makeUIView(context: Context) -> ViewType {
-        context.coordinator.compose(.make, configurations: self.configurations)(self.view)!
+        context.coordinator.compose(.make, configurations: self.configurations)(self.view, context).0!
     }
 
     public func updateUIView(_ uiView: ViewType, context: Context) {
-        context.coordinator.compose(.update, configurations: self.configurations)(uiView)
+        context.coordinator.compose(.update, configurations: self.configurations)(uiView, context)
     }
     #elseif os(macOS)
     public func makeNSView(context: Context) -> ViewType {
-        context.coordinator.compose(.make, configurations: self.configurations)(self.view)!
+        context.coordinator.compose(.make, configurations: self.configurations)(self.view, context).0!
     }
 
     public func updateNSView(_ nsView: ViewType, context: Context) {
-        context.coordinator.compose(.update, configurations: self.configurations)(nsView)
+        context.coordinator.compose(.update, configurations: self.configurations)(nsView, context)
     }
     #endif
 
     public func makeCoordinator() -> Coordinator {
-        Coordinator(self.configurations)
+        Coordinator()
     }
 }

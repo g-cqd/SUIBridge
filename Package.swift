@@ -4,17 +4,17 @@ import PackageDescription
 
 let package = Package(
     name: "SUIBridge",
-    platforms: [.iOS(.v17),.macOS(.v14)],
+    platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(
             name: "SUIBridge",
-            targets: ["SUIBridge"]),
+            targets: ["SUIBridge"])
     ],
     targets: [
         .target(
             name: "SUIBridge"),
         .testTarget(
             name: "SUIBridgeTests",
-            dependencies: ["SUIBridge"]),
+            dependencies: ["SUIBridge"])
     ]
 )

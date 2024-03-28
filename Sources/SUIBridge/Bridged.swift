@@ -10,7 +10,7 @@ import UIKit
 #endif
 import SwiftUI
 
-public struct Bridged<Root>: View  where Root : Representable.Represented {
+public struct Bridged<Root>: View  where Root: Representable.Represented {
 
     #if os(macOS)
     public typealias NSViewType = Root
@@ -19,6 +19,7 @@ public struct Bridged<Root>: View  where Root : Representable.Represented {
     public typealias UIViewType = Root
     public typealias ViewType = UIViewType
     #endif
+    public typealias Context = Bridge<ViewType>.Context
     public typealias Configuration = ViewConfiguration<ViewType>
     public typealias Configurations = [Configuration]
 
@@ -38,14 +39,40 @@ public struct Bridged<Root>: View  where Root : Representable.Represented {
     }
 
     public func set<Value>(
-        _ path: ReferenceWritableKeyPath<ViewType,Value>,
+        _ path: ReferenceWritableKeyPath<ViewType, Value>,
         to value: @autoclosure @escaping () -> Value?,
         at step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?) in
+            Configuration(step) { (view: ViewType?, context: Context?) in
                 view?[keyPath: path] = value() ?? view![keyPath: path]
-                return view
+                return (view, context)
+            }
+        )
+    }
+
+    public func set<Value>(
+        _ path: ReferenceWritableKeyPath<ViewType, Value>,
+        to value: @escaping (ViewType?) -> Value?,
+        at step: CycleMoment = .all
+    ) -> Self {
+        self.appending(
+            Configuration(step) { (view: ViewType?, context: Context?) in
+                view?[keyPath: path] = value(view) ?? view![keyPath: path]
+                return (view, context)
+            }
+        )
+    }
+
+    public func set<Value>(
+        _ path: ReferenceWritableKeyPath<ViewType, Value>,
+        to value: @escaping (ViewType?, Context?) -> Value?,
+        at step: CycleMoment = .all
+    ) -> Self {
+        self.appending(
+            Configuration(step) { (view: ViewType?, context: Context?) in
+                view?[keyPath: path] = value(view, context) ?? view![keyPath: path]
+                return (view, context)
             }
         )
     }

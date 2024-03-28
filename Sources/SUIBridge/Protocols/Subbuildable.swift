@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Guillaume Coquard on 27/03/24.
 //
@@ -19,7 +19,7 @@ public protocol Subbuildable {
     static func buildFinalResult(_ component: Input) -> Output
 }
 
-extension Subbuildable where Input : Representable.Represented, Output == Representable.Represented {
+extension Subbuildable where Input: Representable.Represented, Output == Representable.Represented {
 
     public static func buildOptional(_ component: Input?) -> Output {
         if let component = component {
