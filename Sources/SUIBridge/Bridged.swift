@@ -41,7 +41,7 @@ public struct Bridged<Root>: View  where Root: Representable.Represented {
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<ViewType, Value>,
         to value: @autoclosure @escaping () -> Value?,
-        at step: CycleMoment = .all
+        during step: CycleMoment = .all
     ) -> Self {
         self.appending(
             Configuration(step) { (view: ViewType?, context: Context?) in
@@ -53,25 +53,46 @@ public struct Bridged<Root>: View  where Root: Representable.Represented {
 
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<ViewType, Value>,
-        to value: @escaping (ViewType?) -> Value?,
-        at step: CycleMoment = .all
+        to value: @escaping (ViewType?, Context?) -> Value?,
+        during step: CycleMoment = .all
     ) -> Self {
         self.appending(
             Configuration(step) { (view: ViewType?, context: Context?) in
-                view?[keyPath: path] = value(view) ?? view![keyPath: path]
+                view?[keyPath: path] = value(view, context) ?? view![keyPath: path]
                 return (view, context)
             }
         )
     }
 
-    public func set<Value>(
-        _ path: ReferenceWritableKeyPath<ViewType, Value>,
-        to value: @escaping (ViewType?, Context?) -> Value?,
-        at step: CycleMoment = .all
+    public func onMake(
+        perform action: @escaping (ViewType?, Context?) -> Void
+    ) -> Self {
+        self.appending(
+            Configuration(.make) { (view: ViewType?, context: Context?) in
+                action(view, context)
+                return (view, context)
+            }
+        )
+    }
+
+    public func onUpdate(
+        perform action: @escaping (ViewType?, Context?) -> Void
+    ) -> Self {
+        self.appending(
+            Configuration(.update) { (view: ViewType?, context: Context?) in
+                action(view, context)
+                return (view, context)
+            }
+        )
+    }
+
+    public func perform(
+        _ action: @escaping (ViewType?, Context?) -> Void,
+        during step: CycleMoment = .all
     ) -> Self {
         self.appending(
             Configuration(step) { (view: ViewType?, context: Context?) in
-                view?[keyPath: path] = value(view, context) ?? view![keyPath: path]
+                action(view, context)
                 return (view, context)
             }
         )
