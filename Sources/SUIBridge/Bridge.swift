@@ -26,26 +26,26 @@ public struct Bridge<Root>: Representable.ViewRepresentable where Root: Represen
     private(set) var configurations: [Configuration] = []
     private(set) var view: ViewType?
 
-    init(_ bridge: Bridge) {
+    public init(_ bridge: Bridge) {
         self.view = bridge.view
         self.configurations = bridge.configurations
     }
 
-    init(_ view: ViewType, _ configurations: [Configuration]) {
+    public init(_ view: ViewType, _ configurations: [Configuration]) {
         self.view = view
         self.configurations = configurations
     }
 
-    init(_ view: ViewType, _ configurations: Configuration...) {
+    public init(_ view: ViewType, _ configurations: Configuration...) {
         self.view = view
         self.configurations = configurations
     }
 
-    init(_ configurations: [Configuration]) {
+    public init(_ configurations: [Configuration]) {
         self.configurations = configurations
     }
 
-    init(_ configurations: Configuration...) {
+    public init(_ configurations: Configuration...) {
         self.configurations = configurations
     }
 

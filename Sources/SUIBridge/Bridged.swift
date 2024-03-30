@@ -26,7 +26,7 @@ public struct Bridged<Root>: View  where Root: Representable.Represented {
     let view: ViewType
     var configurations: Configurations = []
 
-    init(_ view: ViewType, _ configurations: Configurations) {
+    public init(_ view: ViewType, _ configurations: Configurations = []) {
         self.view = view
         self.configurations = configurations
     }

@@ -19,8 +19,17 @@ public protocol Representable {
 
 extension Representable.Represented: Modifiable {}
 extension Representable.Represented {
-    public func callAsFunction<Subview>(@SubviewBuilder subview: () -> Subview) -> Self where Subview: Representable.Represented {
-        self.addSubview(subview())
+    public func callAsFunction(@SubviewBuilder subview: () -> Representable.Represented? = { nil }) -> Self {
+        if let subview = subview() {
+            self.addSubview(subview)
+        }
         return self
+    }
+
+    public func callAsFunction<Root>(@SubviewBuilder subview: () -> Representable.Represented? = { nil }) -> Bridged<Root> where Root : Representable.Represented {
+        if let subview = subview() {
+            self.addSubview(subview)
+        }
+        return Bridged<Root>(self as! Root)
     }
 }
