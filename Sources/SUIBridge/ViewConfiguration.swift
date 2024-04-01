@@ -14,10 +14,11 @@ public struct ViewConfiguration<Root> where Root: Representable.Represented {
 
     public typealias ViewType = Root
     public typealias Context = Bridge<ViewType>.Context
+    public typealias Storage = Bridge<ViewType>.Storage
     public typealias ConfigurationMoment = CycleMoment
-    public typealias ConfigurationTask = (ViewType?, Context?) -> (ViewType?, Context?)
+    public typealias ConfigurationTask = (ViewType?, Context?, Storage?) -> (ViewType?, Context?)
 
-    static public func Passthrough(_ object: ViewType?, _ context: Context?) -> (ViewType?, Context?) { (object, nil) }
+    static public func Passthrough(_ object: ViewType?, _ context: Context?, _ storage: Storage?) -> (ViewType?, Context?) { (object, nil) }
 
     private(set) public var moment: ConfigurationMoment = .all
     private(set) public var task: ConfigurationTask = Self.Passthrough
@@ -48,13 +49,13 @@ public struct ViewConfiguration<Root> where Root: Representable.Represented {
 
     public init(_ moment: ConfigurationMoment = .all, tasks: [ConfigurationTask]) {
         self.moment = moment
-        self.task = tasks.reduce({ (view: ViewType?, context: Context?) in (view, context) }) { prev, next in { (view: ViewType?, context: Context?) in next( prev(view, context).0, context ) }
+        self.task = tasks.reduce({ (view: ViewType?, context: Context?, storage: Storage?) in (view, context) }) { prev, next in { (view: ViewType?, context: Context?, storage: Storage?) in next( prev(view, context, storage).0, context, storage ) }
         }
     }
 
     public init(_ moment: ConfigurationMoment = .all, tasks: ConfigurationTask...) {
         self.moment = moment
-        self.task = tasks.reduce({ (view: ViewType?, context: Context?) in (view, context) }) { prev, next in { (view: ViewType?, context: Context?) in next( prev( view, context ).0, context ) }
+        self.task = tasks.reduce({ (view: ViewType?, context: Context?, storage: Storage?) in (view, context) }) { prev, next in { (view: ViewType?, context: Context?, storage: Storage?) in next( prev( view, context, storage ).0, context, storage ) }
         }
     }
 
@@ -78,16 +79,16 @@ public struct ViewConfiguration<Root> where Root: Representable.Represented {
         return if moment.isEmpty {
             Self()
         } else {
-            Self(moment, { (view: ViewType?, context: Context?) in rhs.task( lhs.task( view, context ).0, context ) })
+            Self(moment, { (view: ViewType?, context: Context?, storage: Storage?) in rhs.task( lhs.task( view, context, storage ).0, context, storage ) })
         }
     }
 
     static public func +(lhs: Self, rhs: @escaping ConfigurationTask) -> Self {
-        Self(lhs.moment, { (view: ViewType?, context: Context?) in rhs( lhs.task( view, context ).0, context ) })
+        Self(lhs.moment, { (view: ViewType?, context: Context?, storage: Storage?) in rhs( lhs.task( view, context, storage ).0, context, storage ) })
     }
 
     static public func +(lhs: @escaping ConfigurationTask, rhs: Self) -> Self {
-        Self(rhs.moment, { (view: ViewType?, context: Context?) in rhs.task( lhs( view, context ).0, context ) })
+        Self(rhs.moment, { (view: ViewType?, context: Context?, storage: Storage?) in rhs.task( lhs( view, context, storage ).0, context, storage ) })
     }
 
     public func precedes(_ configurations: Self...) -> Self {
@@ -99,7 +100,7 @@ public struct ViewConfiguration<Root> where Root: Representable.Represented {
     }
 
     @discardableResult
-    public func callAsFunction(_ view: ViewType?, _ context: Context?) -> (ViewType?, Context?) {
-        self.task( view, context )
+    public func callAsFunction(_ view: ViewType?, _ context: Context?, _ storage: Storage?) -> (ViewType?, Context?) {
+        self.task( view, context, storage )
     }
 }

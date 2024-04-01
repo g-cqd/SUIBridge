@@ -20,6 +20,7 @@ public struct Bridged<Root>: View  where Root: Representable.Represented {
     public typealias ViewType = UIViewType
     #endif
     public typealias Context = Bridge<ViewType>.Context
+    public typealias Storage = Bridge<ViewType>.Storage
     public typealias Configuration = ViewConfiguration<ViewType>
     public typealias Configurations = [Configuration]
 
@@ -44,7 +45,7 @@ public struct Bridged<Root>: View  where Root: Representable.Represented {
         during step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?, context: Context?) in
+            Configuration(step) { (view: ViewType?, context: Context?, _) in
                 view?[keyPath: path] = value() ?? view![keyPath: path]
                 return (view, context)
             }
@@ -53,46 +54,46 @@ public struct Bridged<Root>: View  where Root: Representable.Represented {
 
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<ViewType, Value>,
-        to value: @escaping (ViewType?, Context?) -> Value?,
+        to value: @escaping (ViewType?, Context?, Storage?) -> Value?,
         during step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?, context: Context?) in
-                view?[keyPath: path] = value(view, context) ?? view![keyPath: path]
+            Configuration(step) { (view: ViewType?, context: Context?, storage: Storage?) in
+                view?[keyPath: path] = value(view, context, storage) ?? view![keyPath: path]
                 return (view, context)
             }
         )
     }
 
     public func onMake(
-        perform action: @escaping (ViewType?, Context?) -> Void
+        perform action: @escaping (ViewType?, Context?, Storage?) -> Void
     ) -> Self {
         self.appending(
-            Configuration(.make) { (view: ViewType?, context: Context?) in
-                action(view, context)
+            Configuration(.make) { (view: ViewType?, context: Context?, storage: Storage?) in
+                action(view, context, storage)
                 return (view, context)
             }
         )
     }
 
     public func onUpdate(
-        perform action: @escaping (ViewType?, Context?) -> Void
+        perform action: @escaping (ViewType?, Context?, Storage?) -> Void
     ) -> Self {
         self.appending(
-            Configuration(.update) { (view: ViewType?, context: Context?) in
-                action(view, context)
+            Configuration(.update) { (view: ViewType?, context: Context?, storage: Storage?) in
+                action(view, context, storage)
                 return (view, context)
             }
         )
     }
 
     public func perform(
-        _ action: @escaping (ViewType?, Context?) -> Void,
+        _ action: @escaping (ViewType?, Context?, Storage?) -> Void,
         during step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?, context: Context?) in
-                action(view, context)
+            Configuration(step) { (view: ViewType?, context: Context?, storage: Storage?) in
+                action(view, context, storage)
                 return (view, context)
             }
         )
