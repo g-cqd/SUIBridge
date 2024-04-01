@@ -26,10 +26,10 @@ extension Representable.Represented {
         return self
     }
 
-    public func callAsFunction<Root>(@SubviewBuilder subview: () -> Representable.Represented? = { nil }) -> Bridged<Root> where Root : Representable.Represented {
+    public func callAsFunction<Root>(@SubviewBuilder subview: () -> Representable.Represented? = { nil }) -> Bridge<Root> where Root : Representable.Represented {
         if let subview = subview() {
             self.addSubview(subview)
         }
-        return Bridged<Root>(self as! Root)
+        return Bridge<Root>(self as! Root)
     }
 }

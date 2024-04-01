@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 #endif
 
-public protocol Modifiable where R: Representable.Represented, S == R, C == Bridge<R>.Context, T == Bridged<R> {
+public protocol Modifiable where R: Representable.Represented, S == R, C == Bridge<R>.Context, T == Bridge<R> {
 
     associatedtype R
     associatedtype T
@@ -43,7 +43,7 @@ extension Modifiable where R: Representable.Represented {
         _ path: ReferenceWritableKeyPath<Self, Value>,
         to value: @autoclosure @escaping () -> Value,
         during step: CycleMoment = .all
-    ) -> Bridged<Self> {
+    ) -> Bridge<Self> {
         .init(self, [
             .init(step) { (view: Self?, context: Bridge<Self>.Context?, _) in
                 view?[keyPath: path] = value()
@@ -55,7 +55,7 @@ extension Modifiable where R: Representable.Represented {
         _ path: ReferenceWritableKeyPath<Self, Value>,
         to value: @escaping (Self?, Bridge<Self>.Context?, Bridge<Self>.Storage?) -> Value,
         during step: CycleMoment = .all
-    ) -> Bridged<Self> {
+    ) -> Bridge<Self> {
         .init(self, [
             .init(step) { (view: Self?, context: Bridge<Self>.Context?, storage: Bridge<Self>.Storage?) in
                 view?[keyPath: path] = value(view, context, storage)
@@ -68,7 +68,7 @@ extension Modifiable where R: Representable.Represented {
 extension Modifiable where Self: Representable.Represented {
     public func onMake(
         perform action: @escaping (Self?, Bridge<Self>.Context?, Bridge<Self>.Storage?) -> Void
-    ) -> Bridged<Self> {
+    ) -> Bridge<Self> {
         .init(self, [
             .init(.make) { (view: Self?, context: Bridge<Self>.Context?, storage: Bridge<Self>.Storage?) in
                 action(view, context, storage)
@@ -78,7 +78,7 @@ extension Modifiable where Self: Representable.Represented {
     }
     public func onUpdate(
         perform action: @escaping (Self?, Bridge<Self>.Context?, Bridge<Self>.Storage?) -> Void
-    ) -> Bridged<Self> {
+    ) -> Bridge<Self> {
         .init(self, [
             .init(.update) { (view: Self?, context: Bridge<Self>.Context?, storage: Bridge<Self>.Storage?) in
                 action(view, context, storage)
@@ -89,7 +89,7 @@ extension Modifiable where Self: Representable.Represented {
     public func perform(
         _ action: @escaping (Self?, Bridge<Self>.Context?, Bridge<Self>.Storage?) -> Void,
         during step: CycleMoment = .all
-    ) -> Bridged<Self> {
+    ) -> Bridge<Self> {
         .init(self, [
             .init(step) { (view: Self?, context: Bridge<Self>.Context?, storage: Bridge<Self>.Storage?) in
                 action(view, context, storage)
