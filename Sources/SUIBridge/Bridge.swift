@@ -22,27 +22,23 @@ public struct Bridge<Root>: Representable.ViewRepresentable where Root: Represen
     #endif
     public typealias Configuration = ViewConfiguration<ViewType>
     public typealias Coordinator = BridgeCoordinator<ViewType>
-    public typealias Storage = [AnyHashable: Any?]
 
     private(set) var configurations: [Configuration] = []
     private(set) var view: ViewType?
-    public var storage: Storage = [:]
 
     public init(_ bridge: Bridge) {
         self.view = bridge.view
         self.configurations = bridge.configurations
     }
 
-    public init(_ view: ViewType, _ configurations: [Configuration] = [], _ storage: Storage = [:]) {
+    public init(_ view: ViewType, _ configurations: [Configuration] = []) {
         self.view = view
         self.configurations = configurations
-        self.storage = storage
     }
 
-    public init(_ view: ViewType, _ configurations: Configuration..., storage: Storage = [:]) {
+    public init(_ view: ViewType, _ configurations: Configuration...) {
         self.view = view
         self.configurations = configurations
-        self.storage = storage
     }
 
     public init(_ configurations: [Configuration]) {
@@ -57,24 +53,24 @@ public struct Bridge<Root>: Representable.ViewRepresentable where Root: Represen
 
     #if os(iOS)
     public func makeUIView(context: Context) -> ViewType {
-        context.coordinator.compose(.make, configurations: self.configurations)(self.view, context, self.storage).0!
+        context.coordinator.compose(.make, configurations: self.configurations)(self.view, context).0!
     }
 
     public func updateUIView(_ uiView: ViewType, context: Context) {
-        context.coordinator.compose(.update, configurations: self.configurations)(uiView, context, self.storage)
+        context.coordinator.compose(.update, configurations: self.configurations)(uiView, context)
     }
     #elseif os(macOS)
     public func makeNSView(context: Context) -> ViewType {
-        context.coordinator.compose(.make, configurations: self.configurations)(self.view, context, self.storage).0!
+        context.coordinator.compose(.make, configurations: self.configurations)(self.view, context).0!
     }
 
     public func updateNSView(_ nsView: ViewType, context: Context) {
-        context.coordinator.compose(.update, configurations: self.configurations)(nsView, context, self.storage)
+        context.coordinator.compose(.update, configurations: self.configurations)(nsView, context)
     }
     #endif
 
     public func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(self)
     }
 }
 
@@ -92,7 +88,7 @@ extension Bridge {
         during step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?, context: Context?, _) in
+            Configuration(step) { (view: ViewType?, context: Context?) in
                 view?[keyPath: path] = value() ?? view![keyPath: path]
                 return (view, context)
             }
@@ -101,46 +97,46 @@ extension Bridge {
 
     public func set<Value>(
         _ path: ReferenceWritableKeyPath<ViewType, Value>,
-        to value: @escaping (ViewType?, Context?, Storage?) -> Value?,
+        to value: @escaping (ViewType?, Context?) -> Value?,
         during step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?, context: Context?, storage: Storage?) in
-                view?[keyPath: path] = value(view, context, storage) ?? view![keyPath: path]
+            Configuration(step) { (view: ViewType?, context: Context?) in
+                view?[keyPath: path] = value(view, context) ?? view![keyPath: path]
                 return (view, context)
             }
         )
     }
 
     public func onMake(
-        perform action: @escaping (ViewType?, Context?, Storage?) -> Void
+        perform action: @escaping (ViewType?, Context?) -> Void
     ) -> Self {
         self.appending(
-            Configuration(.make) { (view: ViewType?, context: Context?, storage: Storage?) in
-                action(view, context, storage)
+            Configuration(.make) { (view: ViewType?, context: Context?) in
+                action(view, context)
                 return (view, context)
             }
         )
     }
 
     public func onUpdate(
-        perform action: @escaping (ViewType?, Context?, Storage?) -> Void
+        perform action: @escaping (ViewType?, Context?) -> Void
     ) -> Self {
         self.appending(
-            Configuration(.update) { (view: ViewType?, context: Context?, storage: Storage?) in
-                action(view, context, storage)
+            Configuration(.update) { (view: ViewType?, context: Context?) in
+                action(view, context)
                 return (view, context)
             }
         )
     }
 
     public func perform(
-        _ action: @escaping (ViewType?, Context?, Storage?) -> Void,
+        _ action: @escaping (ViewType?, Context?) -> Void,
         during step: CycleMoment = .all
     ) -> Self {
         self.appending(
-            Configuration(step) { (view: ViewType?, context: Context?, storage: Storage?) in
-                action(view, context, storage)
+            Configuration(step) { (view: ViewType?, context: Context?) in
+                action(view, context)
                 return (view, context)
             }
         )

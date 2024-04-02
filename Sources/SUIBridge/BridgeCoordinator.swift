@@ -10,12 +10,17 @@ import SwiftUI
 import UIKit
 #endif
 
-open class BridgeCoordinator<Root> where Root: Representable.Represented {
+open class BridgeCoordinator<Root>: NSObject where Root: Representable.Represented {
 
     public typealias ViewType = Root
     public typealias Configuration = ViewConfiguration<ViewType>
 
-    public init() {}
+    public var root: Bridge<ViewType>
+
+    public init(_ root: Bridge<ViewType>) {
+        self.root = root
+        super.init()
+    }
 
     public func compose(_ moment: CycleMoment, configurations: Configuration...) -> Configuration {
         configurations.reduce(.init(moment), +)
