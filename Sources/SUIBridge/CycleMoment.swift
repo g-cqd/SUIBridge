@@ -17,8 +17,9 @@ public struct CycleMoment: OptionSet {
         self.rawValue = rawValue
     }
 
-    static public let make: Self =     .init(rawValue: 1 << 1)
-    static public let update: Self =   .init(rawValue: 1 << 2)
+    static public let make: Self =          .init(rawValue: 1 << 1)
+    static public let update: Self =        .init(rawValue: 1 << 2)
+    static public let dismantle: Self =     .init(rawValue: 1 << 3)
 
     static public let all: Self = [.make, .update]
     static public let none: Self = []

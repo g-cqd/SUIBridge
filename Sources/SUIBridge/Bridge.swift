@@ -59,6 +59,10 @@ public struct Bridge<Root>: Representable.ViewRepresentable where Root: Represen
     public func updateUIView(_ uiView: ViewType, context: Context) {
         context.coordinator.compose(.update, configurations: self.configurations)(uiView, context)
     }
+
+    public func dismantleUIView(_ uiView: ViewType, coordinator: Coordinator) {
+        coordinator.compose(.dismantle, configurations: self.configurations)(uiView, nil)
+    }
     #elseif os(macOS)
     public func makeNSView(context: Context) -> ViewType {
         context.coordinator.compose(.make, configurations: self.configurations)(self.view, context).0!
@@ -66,6 +70,10 @@ public struct Bridge<Root>: Representable.ViewRepresentable where Root: Represen
 
     public func updateNSView(_ nsView: ViewType, context: Context) {
         context.coordinator.compose(.update, configurations: self.configurations)(nsView, context)
+    }
+
+    public func dismantleNSView(_ nsView: ViewType, coordinator: Coordinator) {
+        coordinator.compose(.dismantle, configurations: self.configurations)(nsView, nil)
     }
     #endif
 
@@ -124,6 +132,17 @@ extension Bridge {
     ) -> Self {
         self.appending(
             Configuration(.update) { (view: ViewType?, context: Context?) in
+                action(view, context)
+                return (view, context)
+            }
+        )
+    }
+
+    public func onDismantle(
+        perform action: @escaping (ViewType?, Context?) -> Void
+    ) -> Self {
+        self.appending(
+            Configuration(.dismantle) { (view: ViewType?, context: Context?) in
                 action(view, context)
                 return (view, context)
             }

@@ -32,4 +32,8 @@ extension Representable.Represented {
         }
         return Bridge<Root>(self as! Root)
     }
+
+    public func asView<Root>() -> Bridge<Root> {
+        .init(self as! Root)
+    }
 }

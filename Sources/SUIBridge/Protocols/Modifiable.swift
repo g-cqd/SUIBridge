@@ -23,6 +23,7 @@ public protocol Modifiable where R: Representable.Represented, S == R, C == Brid
     func set<Value>(_ path: ReferenceWritableKeyPath<R, Value>, to value: @escaping (R?, C?) -> Value, during step: CycleMoment) -> T
     func onMake(perform action: @escaping (R?, C?) -> Void) -> T
     func onUpdate(perform action: @escaping (R?, C?) -> Void) -> T
+    func onDismantle(perform action: @escaping (R?, C?) -> Void) -> T
     func perform(_ action: @escaping (R?, C?) -> Void, during step: CycleMoment) -> T
 }
 
@@ -85,6 +86,17 @@ extension Modifiable where Self: Representable.Represented {
             }
         ])
     }
+    public func onDismantle(
+        perform action: @escaping (Self?, Bridge<Self>.Context?) -> Void
+    ) -> Bridge<Self> {
+        .init(self, [
+            .init(.dismantle) { (view: Self?, context: Bridge<Self>.Context?) in
+                action(view, context)
+                return (view, context)
+            }
+        ])
+    }
+
     public func perform(
         _ action: @escaping (Self?, Bridge<Self>.Context?) -> Void,
         during step: CycleMoment = .all
