@@ -2,9 +2,8 @@
 ## The missing bridge between SwiftUI and UIKit
 
 <detail>
-<summary>
-## A bit of context
-</summary>
+
+<summary><h2>A bit of context</h2></summary>
 
 Everything started when I began developing a Web browser for iOS – still in development by the way. I set 3 goals starting this project:
 
