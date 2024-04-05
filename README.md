@@ -1,7 +1,7 @@
 #  SUIBridge
 ## The missing bridge between SwiftUI and UIKit
 
-<detail>
+<details>
 
 <summary><h2>A bit of context</h2></summary>
 
