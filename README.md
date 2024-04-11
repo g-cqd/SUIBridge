@@ -346,9 +346,3 @@ struct ContentView: View {
 [^appkit]: AppKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/appkit](https://developer.apple.com/documentation/appkit){:target="_blank"}
 
 [^nsview]: `NSView` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/appkit/nsview/](https://developer.apple.com/documentation/appkit/nsview/){:target="_blank"}
-
-
-*[DMA]: Digital Markets Act
-*[GUI]: Graphical User Interface
-*[API]: Application Programming Interface
-*[APIs]: Application Programming Interfaces
