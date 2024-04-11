@@ -28,7 +28,7 @@ Keeping the app as native as possible will help avoid third-party libraries and 
 
 The third goal is something I have to take care of on another level of concern that does not really suit this article.
 
-Sticking to those goals would vastly accelerate development and increase productivity, but to achieve them on iOS, there's one thing that we can't circumvent: we have to use Apple **WebKit**[^webkit] APIs. It was a requirement before [Apple release changes to their applications policies](https://www.apple.com/newsroom/2024/01/apple-announces-changes-to-ios-safari-and-the-app-store-in-the-european-union/){:target="_blank"} due to European Union DMA[^dma].
+Sticking to those goals would vastly accelerate development and increase productivity, but to achieve them on iOS, there's one thing that we can't circumvent: we have to use Apple **WebKit**[^webkit] APIs. It was a requirement before [Apple release changes to their applications policies](https://www.apple.com/newsroom/2024/01/apple-announces-changes-to-ios-safari-and-the-app-store-in-the-european-union/) due to European Union DMA[^dma].
 Besides this, it is also the best way to go fully native and that's exactly what I wanted to do as I just said.
 
 </details>
@@ -259,7 +259,7 @@ struct ContentView {
 }
 ```
 
-And that works with **all** (custom or not) views that inherit `UIView`. The `SubviewBuilder` works (_almost_) the same way a `@ViewBuilder` would work. I let you have a look at the [documentation about the "Result Builders"](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/advancedoperators#Result-Builders){:target="_blank"} to understand this API.
+And that works with **all** (custom or not) views that inherit `UIView`. The `SubviewBuilder` works (_almost_) the same way a `@ViewBuilder` would work. I let you have a look at the [documentation about the "Result Builders"](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/advancedoperators#Result-Builders) to understand this API.
 
 _Right now, the builder is not able to understand SwiftUI views, but it's a future implementation._
 
@@ -281,13 +281,13 @@ Because I plan to continue to work on the bridge, the bridge is already capable 
 
 ## I guess I have to conclude
 
-As of today, this is the state of SUIBridge. You can [find it on GitHub](https://github.com/g-cqd/SUIBridge){:target="_blank"} and use it in Xcode as a package dependency directly.
+As of today, this is the state of SUIBridge. You can [find it on GitHub](https://github.com/g-cqd/SUIBridge) and use it in Xcode as a package dependency directly.
 
 Performance has not been tested but I welcome any benchmark process idea from the community and invite you to inform me about problems related to your use of the package, feature requests, improvements,...
 
 If you have any comments or questions, find me on social media and reach out to me or submit an issue here.
 
-You can find the [prototype of the bridge here](https://github.com/g-cqd/SUIBridgePrototype){:target="_blank"}. It does not work but it shows what I had in mind starting this project.
+You can find the [prototype of the bridge here](https://github.com/g-cqd/SUIBridgePrototype). It does not work but it shows what I had in mind starting this project.
 
 I also invite you to have a look at the project of Antoine van der Lee [**SwiftUIKitView**](https://github.com/AvdLee/SwiftUIKitView) which is something really close if not the same, that I discovered after having done the prototype. I used Antoine's as inspiration to improve mine and I noticed that his project may encounter some problems and may not work currently so I consider that SUIBridge currently fixes problems his had and also does things that I'm not aware his is doing.
 
@@ -319,30 +319,30 @@ struct ContentView: View {
 }
 ```
 
-[^dma]: The Digital Markets Act: ensuring fair and open digital markets<br>[https://commission.europa.eu/.../digital-markets-act-ensuring-fair-and-open-digital-markets_en](https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/europe-fit-digital-age/digital-markets-act-ensuring-fair-and-open-digital-markets_en){:target="_blank"}
+[^dma]: The Digital Markets Act: ensuring fair and open digital markets<br>[https://commission.europa.eu/.../digital-markets-act-ensuring-fair-and-open-digital-markets_en](https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/europe-fit-digital-age/digital-markets-act-ensuring-fair-and-open-digital-markets_en)
 
-[^swiftui]: SwiftUI Overview - Xcode - Apple Developer<br>[https://developer.apple.com/xcode/swiftui/](https://developer.apple.com/xcode/swiftui/){:target="_blank"}
+[^swiftui]: SwiftUI Overview - Xcode - Apple Developer<br>[https://developer.apple.com/xcode/swiftui/](https://developer.apple.com/xcode/swiftui/)
 
-[^webkit]: WebKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/webkit](https://developer.apple.com/documentation/webkit){:target="_blank"}
+[^webkit]: WebKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/webkit](https://developer.apple.com/documentation/webkit)
 
-[^uikit]: UIKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/uikit](https://developer.apple.com/documentation/uikit){:target="_blank"}
+[^uikit]: UIKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/uikit](https://developer.apple.com/documentation/uikit)
 
-[^wkwebview]: `WKWebView` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/webkit/wkwebview](https://developer.apple.com/documentation/webkit/wkwebview){:target="_blank"}
+[^wkwebview]: `WKWebView` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/webkit/wkwebview](https://developer.apple.com/documentation/webkit/wkwebview)
 
-[^swiftpkg]: _Swift packages are reusable components of Swift, Objective-C, Objective-C++, C, or C++ code that developers can use in their projects. They bundle source files, binaries, and resources in a way that’s easy to use in your app’s project._<br>Swift packages \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/xcode/swift-packages](https://developer.apple.com/documentation/xcode/swift-packages){:target="_blank"}
+[^swiftpkg]: _Swift packages are reusable components of Swift, Objective-C, Objective-C++, C, or C++ code that developers can use in their projects. They bundle source files, binaries, and resources in a way that’s easy to use in your app’s project._<br>Swift packages \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/xcode/swift-packages](https://developer.apple.com/documentation/xcode/swift-packages)
 
 [^generics]: Generics \| Documentation \| Swift.org<br>[https://docs.swift.org/swift-book/documentation/the-swift-programming-language/generics/](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/generics/)
 
-[^uiviewrepresentable]: `UIViewRepresentable` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/swiftui/uiviewrepresentable](https://developer.apple.com/documentation/swiftui/uiviewrepresentable){:target="_blank"}
+[^uiviewrepresentable]: `UIViewRepresentable` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/swiftui/uiviewrepresentable](https://developer.apple.com/documentation/swiftui/uiviewrepresentable)
 
-[^referencewritablekeypath]: `ReferenceWritableKeyPath` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/swift/referencewritablekeypath](https://developer.apple.com/documentation/swift/referencewritablekeypath){:target="_blank"}
+[^referencewritablekeypath]: `ReferenceWritableKeyPath` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/swift/referencewritablekeypath](https://developer.apple.com/documentation/swift/referencewritablekeypath)
 
-[^autoclosure]: Autoclosures \| Closures \| Apple Developer Documentation<br>[https://docs.swift.org/swift-book/documentation/the-swift-programming-language/closures/#Autoclosures](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/closures/#Autoclosures){:target="_blank"}
+[^autoclosure]: Autoclosures \| Closures \| Apple Developer Documentation<br>[https://docs.swift.org/swift-book/documentation/the-swift-programming-language/closures/#Autoclosures](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/closures/#Autoclosures)
 
-[^viewconfiguration]: `ViewConfiguration` \| SUIBridge \| GitHub <br>[https://github.com/g-cqd/SUIBridge/blob/main/Sources/SUIBridge/ViewConfiguration.swift](https://github.com/g-cqd/SUIBridge/blob/main/Sources/SUIBridge/ViewConfiguration.swift){:target="_blank"}
+[^viewconfiguration]: `ViewConfiguration` \| SUIBridge \| GitHub <br>[https://github.com/g-cqd/SUIBridge/blob/main/Sources/SUIBridge/ViewConfiguration.swift](https://github.com/g-cqd/SUIBridge/blob/main/Sources/SUIBridge/ViewConfiguration.swift)
 
-[^funcprog]: Functional programming - Wikipedia<br>[https://en.wikipedia.org/wiki/Functional_programming](https://en.wikipedia.org/wiki/Functional_programming){:target="_blank"}
+[^funcprog]: Functional programming - Wikipedia<br>[https://en.wikipedia.org/wiki/Functional_programming](https://en.wikipedia.org/wiki/Functional_programming)
 
-[^appkit]: AppKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/appkit](https://developer.apple.com/documentation/appkit){:target="_blank"}
+[^appkit]: AppKit \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/appkit](https://developer.apple.com/documentation/appkit)
 
-[^nsview]: `NSView` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/appkit/nsview/](https://developer.apple.com/documentation/appkit/nsview/){:target="_blank"}
+[^nsview]: `NSView` \| Apple Developer Documentation<br>[https://developer.apple.com/documentation/appkit/nsview/](https://developer.apple.com/documentation/appkit/nsview/)
